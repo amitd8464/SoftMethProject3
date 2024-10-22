@@ -1,16 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+<?import javafx.stage.Stage?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.clinicmanagerjavafx.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<Stage resizable="false" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <scene>
+        <Scene>
+            <AnchorPane prefHeight="394.0" prefWidth="500.0">
+                <children>
+                    <TabPane prefHeight="393.0" prefWidth="499.0" tabClosingPolicy="UNAVAILABLE">
+                        <tabs>
+                            <Tab text="Schedule">
+                                <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                        <children>
+                                            <Text layoutX="299.0" layoutY="185.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Info" />
+                                            <TextField layoutX="299.0" layoutY="217.0" promptText="first name" />
+                                            <TextField layoutX="299.0" layoutY="250.0" promptText="last name" />
+                                            <DatePicker layoutX="299.0" layoutY="287.0" promptText="date of birth" />
+                                            <Pane fx:id="appointmentInfoPane" layoutY="3.0" prefHeight="194.0" prefWidth="222.0">
+                                                <children>
+                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#45a8ff5e" height="26.0" layoutX="14.0" layoutY="18.0" stroke="BLACK" strokeType="INSIDE" width="154.0" />
+                                                    <Text layoutX="23.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Information" />
+                                                    <DatePicker fx:id="appointmentDatePicker" layoutX="14.0" layoutY="56.0" promptText="date of appointment" />
+                                                    <Pane fx:id="visitTypePane" layoutY="97.0" prefHeight="96.0" prefWidth="239.0">
+                                                        <children>
+                                                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2197ff12" height="26.0" layoutX="14.0" layoutY="1.0" stroke="#00000047" strokeType="INSIDE" width="71.0" />
+                                                            <Text layoutX="23.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visit Type" />
+                                                            <RadioButton fx:id="imagingRadioButton" layoutX="11.0" layoutY="39.0" mnemonicParsing="false" onAction="#showOfficeDetailSelector" text="Office" />
+                                                            <RadioButton layoutX="76.0" layoutY="39.0" mnemonicParsing="false" prefHeight="13.0" prefWidth="67.0" text="Imaging" />
+                                                        </children>
+                                                    </Pane>
+                                                </children>
+                                            </Pane>
+                                            <Pane fx:id="officeAppointmentSelectorPane" layoutX="11.0" layoutY="164.0" prefHeight="119.0" prefWidth="239.0">
+                                                <children>
+                                       <Group layoutY="21.0">
+                                          <children>
+                                                          <ChoiceBox fx:id="chosenTimeslot" prefWidth="150.0" />
+                                                          <ChoiceBox fx:id="chosenProvider" layoutY="40.0" prefWidth="150.0" />
+                                          </children>
+                                       </Group>
+                                                </children>
+                                            </Pane>
+                                        </children>
+                                    </AnchorPane>
+                                </content>
+                            </Tab>
+                            <Tab text="Reschedule">
+                                <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                        <children>
+                                            <TextField layoutX="138.0" layoutY="125.0" />
+                                            <RadioButton layoutX="27.0" layoutY="24.0" mnemonicParsing="false" text="Schedule" />
+                                        </children>
+                                    </AnchorPane>
+                                </content>
+                            </Tab>
+                            <Tab text="Cancel">
+                                <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                </content>
+                            </Tab>
+                            <Tab text="List" />
+                        </tabs>
+                    </TabPane>
+                </children></AnchorPane>
+        </Scene>
+    </scene>
+</Stage>
