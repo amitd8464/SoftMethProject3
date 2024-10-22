@@ -1,16 +1,24 @@
 package org.example.clinicmanagerjavafx;
 
-import javafx.beans.InvalidationListener;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
+import clinic.Timeslot;
+import javafx.util.Duration;
+
 public class HelloController {
+
+    @FXML
+    private boolean providersLoaded;
+
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    private Tab scheduleTab;
 
     @FXML
     private DatePicker appointmentDatePicker;
@@ -19,10 +27,16 @@ public class HelloController {
     private Pane appointmentInfoPane;
 
     @FXML
-    private ChoiceBox<String> chosenProvider;
+    private ChoiceBox<String> chosenTimeslotOffice;
 
     @FXML
-    private ChoiceBox<String> chosenTimeslot;
+    private ChoiceBox<String> chosenTimeslotImaging;
+
+    @FXML
+    private ChoiceBox<String> chosenProviderOffice;
+
+    @FXML
+    private ChoiceBox<String> chosenProviderImaging;
 
     @FXML
     private Pane officeAppointmentSelectorPane;
@@ -36,7 +50,6 @@ public class HelloController {
     @FXML
     private ToggleGroup buttonToggleGroup;
 
-    // FXML will handle the instantiation
     @FXML
     private RadioButton officeRadioButton;
 
@@ -44,9 +57,17 @@ public class HelloController {
     private RadioButton imagingRadioButton;
 
     @FXML
-    void setTimeslotOptions(ChoiceBox<?> chosenTimeslot){
-
-        chosenTimeslot.getItems().addAll();
+    void setTimeslotOptions(){
+        try{
+            Timeslot temp;
+            for (int i = 1; i < 13; i++){
+                temp = Timeslot.stringToTimeSlot(String.valueOf(i));
+                chosenTimeslotOffice.getItems().add(temp.toString());
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage() + " caught at line 53 in HelloController.java");
+        }
     }
 
     @FXML
@@ -67,8 +88,30 @@ public class HelloController {
         officeRadioButton.setSelected(false);
     }
 
+    private void showPopupMessage(Tab tab) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText("\nPlease chose a file to load providers from.");
+        alert.getButtonTypes().setAll(ButtonType.OK); // This sets the default button to "OK"
+        alert.showAndWait();
+    }
+
     @FXML
-    public void initialize() {
+    private void setListeners(){
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            if (newTab == scheduleTab && !providersLoaded){
+                showPopupMessage(newTab);
+            }
+        });
+    }
+
+    @FXML
+    private void setInitialPopup(){}
+
+    @FXML
+    public void initialize(){
+        setListeners();
         // Ensure the radio buttons are properly associated with the ToggleGroup
         officeRadioButton.setToggleGroup(buttonToggleGroup);
         imagingRadioButton.setToggleGroup(buttonToggleGroup);
@@ -78,6 +121,7 @@ public class HelloController {
         officeAppointmentSelectorPane.setVisible(true);
         imagingAppointmentSelectorPane.setVisible(false);
 
-        setTimeslotOptions(chosenTimeslot);
+        chosenTimeslotOffice.setValue("Choose a timeslot");
+        setTimeslotOptions();
     }
 }

@@ -14,9 +14,9 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="org.example.clinicmanagerjavafx.HelloController">
     <children>
-        <TabPane prefHeight="393.0" prefWidth="499.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tabPane" prefHeight="393.0" prefWidth="499.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
-                <Tab text="Schedule">
+                <Tab fx:id="scheduleTab" text="Schedule">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
@@ -34,7 +34,7 @@
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2197ff12" height="26.0" layoutX="14.0" layoutY="1.0" stroke="#00000047" strokeType="INSIDE" width="71.0" />
                                                 <Text layoutX="23.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visit Type" />
                                                 <RadioButton fx:id="officeRadioButton" layoutX="11.0" layoutY="39.0" mnemonicParsing="false" onAction="#showOfficeDetailSelector" text="Office" />
-                                                <RadioButton fx:id="imagingRadioButton" layoutX="76.0" layoutY="39.0" mnemonicParsing="false" prefHeight="13.0" prefWidth="67.0" text="Imaging" />
+                                                <RadioButton fx:id="imagingRadioButton" layoutX="76.0" layoutY="39.0" mnemonicParsing="false" onAction="#showImagingDetailSelector" prefHeight="13.0" prefWidth="67.0" text="Imaging" />
                                             </children>
                                         </Pane>
                                     </children>
@@ -43,14 +43,14 @@
                            <children>
                               <Pane fx:id="imagingAppointmentSelectorPane" prefHeight="120.0" prefWidth="200.0" visible="false">
                                  <children>
-                                    <ChoiceBox layoutX="16.0" layoutY="14.0" prefWidth="150.0" />
-                                    <ChoiceBox layoutX="16.0" layoutY="49.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenTimeslotImaging" layoutX="16.0" layoutY="14.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenProviderImaging" layoutX="16.0" layoutY="49.0" prefWidth="150.0" />
                                  </children>
                               </Pane>
                               <Pane fx:id="officeAppointmentSelectorPane" prefHeight="57.0" prefWidth="144.0">
                                  <children>
-                                    <ChoiceBox layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
-                                    <ChoiceBox layoutX="14.0" layoutY="50.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenTimeslotOffice" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenProviderOffice" layoutX="14.0" layoutY="50.0" prefWidth="150.0" />
                                  </children>
                               </Pane>
                            </children>
