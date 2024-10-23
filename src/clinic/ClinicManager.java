@@ -69,7 +69,7 @@ public class ClinicManager {
      * Adds the provider to the provider list
      * @param providerLine - provider to be added
      */
-    private void createProvider(StringTokenizer providerLine) {
+    private static void createProvider(StringTokenizer providerLine) {
         String a = providerLine.nextToken();
         if (a.equals("D")) {
             // doctor
@@ -97,7 +97,7 @@ public class ClinicManager {
      * This takes in the file and parses through the information and adds it to the provider list
      * @param filename - name of file to be parsed
      */
-    private void readProviders(String filename) {
+    public static void readProviders(String filename) {
         try {
             File file = new File(filename);
             Scanner providerScanner = new Scanner(file);

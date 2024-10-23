@@ -9,26 +9,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="org.example.clinicmanagerjavafx.HelloController">
+<AnchorPane fx:id="mainAnchorPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.clinicmanagerjavafx.HelloController">
     <children>
+      <VBox />
         <TabPane fx:id="tabPane" prefHeight="393.0" prefWidth="499.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab fx:id="scheduleTab" text="Schedule">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <Text layoutX="299.0" layoutY="185.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Info" />
-                                <TextField layoutX="299.0" layoutY="217.0" promptText="first name" />
-                                <TextField layoutX="299.0" layoutY="250.0" promptText="last name" />
-                                <DatePicker layoutX="299.0" layoutY="287.0" promptText="date of birth" />
                                 <Pane fx:id="appointmentInfoPane" layoutY="3.0" prefHeight="194.0" prefWidth="222.0">
                                     <children>
-                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#45a8ff5e" height="26.0" layoutX="14.0" layoutY="18.0" stroke="BLACK" strokeType="INSIDE" width="154.0" />
+                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#47a9ff49" height="26.0" layoutX="14.0" layoutY="18.0" stroke="BLACK" strokeType="INSIDE" width="154.0" />
                                         <Text layoutX="23.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment Information" />
-                                        <DatePicker fx:id="appointmentDatePicker" layoutX="14.0" layoutY="56.0" promptText="date of appointment" />
+                                        <DatePicker fx:id="appointmentDatePicker" layoutX="14.0" layoutY="56.0" prefHeight="29.0" prefWidth="185.0" promptText="date of appointment" />
                                         <Pane fx:id="visitTypePane" layoutY="97.0" prefHeight="96.0" prefWidth="239.0">
                                             <children>
                                                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2197ff12" height="26.0" layoutX="14.0" layoutY="1.0" stroke="#00000047" strokeType="INSIDE" width="71.0" />
@@ -41,20 +39,28 @@
                                 </Pane>
                         <StackPane layoutY="163.0" prefHeight="89.0" prefWidth="181.0">
                            <children>
-                              <Pane fx:id="imagingAppointmentSelectorPane" prefHeight="120.0" prefWidth="200.0" visible="false">
+                              <Pane fx:id="officeAppointmentSelectorPane" prefHeight="120.0" prefWidth="200.0">
                                  <children>
-                                    <ChoiceBox fx:id="chosenTimeslotImaging" layoutX="16.0" layoutY="14.0" prefWidth="150.0" />
-                                    <ChoiceBox fx:id="chosenProviderImaging" layoutX="16.0" layoutY="49.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenTimeslotOffice" layoutX="16.0" layoutY="14.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenProvider" layoutX="16.0" layoutY="49.0" prefWidth="150.0" />
                                  </children>
                               </Pane>
-                              <Pane fx:id="officeAppointmentSelectorPane" prefHeight="57.0" prefWidth="144.0">
+                              <Pane fx:id="imagingAppointmentSelectorPane" prefHeight="57.0" prefWidth="144.0" visible="false">
                                  <children>
-                                    <ChoiceBox fx:id="chosenTimeslotOffice" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
-                                    <ChoiceBox fx:id="chosenProviderOffice" layoutX="14.0" layoutY="50.0" prefWidth="150.0" />
+                                    <ChoiceBox fx:id="chosenTimeslotImaging" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
                                  </children>
                               </Pane>
                            </children>
                         </StackPane>
+                        <Pane layoutX="231.0" layoutY="3.0" prefHeight="213.0" prefWidth="200.0">
+                           <children>
+                              <Text layoutX="21.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient Information" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#47a9ff49" height="26.0" layoutX="15.0" layoutY="18.0" stroke="BLACK" strokeType="INSIDE" width="127.0" />
+                                      <TextField layoutX="16.0" layoutY="57.0" promptText="first name" />
+                                      <TextField layoutX="16.0" layoutY="90.0" promptText="last name" />
+                                      <DatePicker layoutX="16.0" layoutY="124.0" prefHeight="26.0" prefWidth="185.0" promptText="date of birth" />
+                           </children>
+                        </Pane>
                             </children>
                         </AnchorPane>
                     </content>
