@@ -101,7 +101,7 @@ public class Patient extends Person{
         if (head == null) return; // visits is empty, nothing to remove. this check should never actually be needed.
 
         if (head.getAppointment().equals(appt)) { // head itself is the appointment, set head to next.
-            head.setNext(head.getNext());
+            this.visits = head.getNext();
             return;
         }
         Visit current = head;
