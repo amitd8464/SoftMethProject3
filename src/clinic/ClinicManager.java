@@ -232,7 +232,17 @@ public class ClinicManager {
         return null;
     }
 
-    private void handleCancel(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob) {
+    private void validateData(String apptDate, String dob) throws Exception{
+        try {
+            Date date1 = Date.strToDate(apptDate, true);
+            Date date2 = Date.strToDate(dob, false);
+        }
+        catch (Exception e){
+            throw e;
+        }
+    }
+
+    public void handleCancel(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob) {
         Profile profile = new Profile(fname, lname, dob);
         boolean found = false;
         for (Appointment appt : appointments) {
@@ -247,7 +257,8 @@ public class ClinicManager {
         if (!found){ System.out.println(apptDate + " " + timeslot + " " + profile + " - appointment does not exist."); }
     }
 
-    private void handleReschedule(Date apptDate, Timeslot oldTimeslot, String newTimeslotStr, String fname, String lname, Date dob) throws Exception {
+    /*
+    public void handleReschedule(Date apptDate, Timeslot oldTimeslot, String newTimeslotStr, String fname, String lname, Date dob) throws Exception {
         Patient patient = new Patient(new Profile(fname, lname, dob));
         try {
             boolean found = false;
@@ -281,8 +292,9 @@ public class ClinicManager {
             System.out.println(e.getMessage());
         }
     }
+    */
 
-    private void handleScheduleImaging(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob, String imagingType) {
+    public void handleScheduleImaging(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob, String imagingType) {
         try {
             Patient patient = new Patient(new Profile(fname, lname, dob));
             if (patientBooked(patient, apptDate, timeslot)) {
@@ -307,7 +319,7 @@ public class ClinicManager {
         }
     }
 
-    private void handleScheduleOffice(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob, String npi) {
+    public void handleScheduleOffice(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob, String npi) {
         // validate NPI
         try {
             Integer.parseInt(npi);
@@ -372,7 +384,7 @@ public class ClinicManager {
                     }
                 case "R":         // R - R,9/30/2024,1,John,Doe,12/13/1989,2
                     if (tokenized_input.countTokens() == 1) {
-                        handleReschedule(apptDate, timeslot, tokenized_input.nextToken(), fname, lname, dob);
+                        //handleReschedule(apptDate, timeslot, tokenized_input.nextToken(), fname, lname, dob);
                         break;
                     }
                 case "T":         // T - T,9/30/2024,1,John,Doe,12/13/1989,xray

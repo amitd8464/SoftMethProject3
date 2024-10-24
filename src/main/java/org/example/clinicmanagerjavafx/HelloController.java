@@ -17,10 +17,8 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 
 import util.Date;
-import util.List;
 
 import java.io.File;
-import java.sql.Time;
 
 public class HelloController {
 
@@ -39,9 +37,9 @@ public class HelloController {
     private Pane imagingAppointmentSelectorPane;
     // these need to be refactored into ComboBox as well
     @FXML
-    private ChoiceBox<String> chosenTimeslotImaging;
+    private ComboBox<Timeslot> cmbChosenTimeslotImaging;
     @FXML
-    private ChoiceBox<String> chosenTimeslotOffice;
+    private ComboBox<Timeslot> cmbChosenTimeslotOffice;
     @FXML
     private DatePicker appointmentDatePicker;
     // -------------------------------------------------------
@@ -63,6 +61,16 @@ public class HelloController {
     @FXML
     private String providersFileName;
 
+    // submit buttons
+    @FXML
+    private Button submitScheduleOffice;
+    @FXML
+    private Button submitScheduleImaging;
+    @FXML
+    private Button submitReschedule;
+    @FXML
+    private Button submitCancel;
+
     // variables that store user information temporarily, to be uploaded to backend:
 
         // user info
@@ -83,28 +91,19 @@ public class HelloController {
         private Timeslot newTimeslot;
 
 
-
-    @FXML
-    void setTimeslotOptions(){
-        try{
-            Timeslot temp;
-            for (int i = 1; i < 13; i++){
-                temp = Timeslot.stringToTimeSlot(String.valueOf(i));
-                chosenTimeslotOffice.getItems().add("(" + i + ") " + temp);
-                chosenTimeslotImaging.getItems().add("(" + i + ") " + temp);
-            }
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage() + " caught at line 53 in HelloController.java");
-        }
-    }
-
+    // Action methods, connected to nodes in GUI:
     @FXML
     void showOfficeDetailSelector(javafx.event.ActionEvent event) {
         officeRadioButton.setSelected(true);
         officeAppointmentSelectorPane.setVisible(true);
         imagingAppointmentSelectorPane.setVisible(false);
         imagingRadioButton.setSelected(false);
+
+        submitScheduleImaging.setDisable(true);
+        submitScheduleImaging.setVisible(false);
+
+        submitScheduleOffice.setDisable(false);
+        submitScheduleOffice.setVisible(true);
     }
 
     @FXML
@@ -113,10 +112,19 @@ public class HelloController {
         imagingAppointmentSelectorPane.setVisible(true);
         officeAppointmentSelectorPane.setVisible(false);
         officeRadioButton.setSelected(false);
+
+        submitScheduleOffice.setDisable(true);
+        submitScheduleOffice.setVisible(false);
+        submitScheduleImaging.setDisable(false);
+        submitScheduleImaging.setVisible(true);
     }
 
-    // Methods that create nodes:
+    @FXML
+    void scheduleOfficeAppt(){}
+    @FXML
+    void scheduleImagingAppt(){}
 
+    // Methods that create nodes:
     private void createFileChooser(Dialog<String> dialog, DialogPane dialogPane, TextField filePathField, ButtonType okButtonType){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Provider's File");
@@ -245,7 +253,9 @@ public class HelloController {
 
     }
 
-    private void chosenProviderSetConverter(){
+    // string converters:
+
+    private void cmbChosenProviderSetConverter(){
         cmbChosenProvider.setConverter(new StringConverter<>() {
             @Override
             public String toString(Provider provider) {
@@ -263,25 +273,43 @@ public class HelloController {
         });
     }
 
+    @FXML
+    void cmbChosenTimeslotSetConverter(ComboBox<Timeslot> cmb){
+        cmb.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Timeslot timeslot) {
+                if (timeslot.getHour() == 0){ // placeholder value
+                    return "Choose a timeslot...";
+                }
+                return timeslot.toString();
+            }
+            @Override
+            public Timeslot fromString(String string) { return null; }
+        });
+    }
+
     private void setValues(){
         // Associate radio buttons with the ToggleGroup
         officeRadioButton.setToggleGroup(buttonToggleGroup);
         imagingRadioButton.setToggleGroup(buttonToggleGroup);
         officeRadioButton.setSelected(true);
 
+        // Set submit button visibility
+        submitScheduleOffice.setVisible(true);
+        submitScheduleImaging.setVisible(false);
+        submitScheduleImaging.setDisable(true);
+
         // Set initial visibility
         officeAppointmentSelectorPane.setVisible(true);
         imagingAppointmentSelectorPane.setVisible(false);
 
-        chosenTimeslotOffice.setValue("Choose a timeslot");
-        chosenTimeslotImaging.setValue("Choose a timeslot");
-
-        chosenProviderSetConverter();
+        cmbChosenProviderSetConverter();
         Doctor loadProvidersPlaceholder = new Doctor(new Profile("LOAD PROVIDERS", "", new Date(0, 0, 0)), "BRIDGEWATER", "FAMILY", "");
         cmbChosenProvider.setValue(loadProvidersPlaceholder);
 
-        // set timeslot values in dropdown
-        setTimeslotOptions();
+        setTimeslotDropdown(cmbChosenTimeslotOffice);
+        setTimeslotDropdown(cmbChosenTimeslotImaging);
+        // cmbChosenTimeslotOffice.setValue(new Timeslot(0, 0));
         providersLoaded = false;
     }
 
@@ -296,6 +324,19 @@ public class HelloController {
         observableProviders.add(placeholder);
         cmbChosenProvider.setItems(observableProviders);
         cmbChosenProvider.setValue(placeholder);
+    }
+
+    @FXML
+    void setTimeslotDropdown(ComboBox<Timeslot> cmb){
+        ObservableList<Timeslot> observableTimeslots = FXCollections.observableArrayList();
+        for (int i = 1; i < 13; i++){
+            observableTimeslots.add(Timeslot.stringToTimeSlot(String.valueOf(i)));
+        }
+        Timeslot placeholder = new Timeslot(0, 0);
+        observableTimeslots.add(placeholder);
+        cmb.setItems(observableTimeslots);
+        cmb.setValue(placeholder);
+        cmbChosenTimeslotSetConverter(cmb);
     }
 
     @FXML

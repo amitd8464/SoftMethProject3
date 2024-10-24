@@ -68,17 +68,17 @@ public class Timeslot implements Comparable<Timeslot> {
      * @return a valid Timeslot equivalent, or null upon error
      * @exception Exception - throws if not valid timeslot
      */
-    public static Timeslot stringToTimeSlot(String timeslotStr) throws Exception{
+    public static Timeslot stringToTimeSlot(String timeslotStr){
         int intTime;
-        try{ // handles non numbers
-            intTime = Integer.parseInt(timeslotStr);
-        }
+        intTime = Integer.parseInt(timeslotStr);
+        /*
         catch (NumberFormatException e){
             throw new InvalidTimeslotException(timeslotStr + " is not a valid time slot.");
         }
         if(intTime < 1 || intTime > 12){ // handles if the timeslotStr is in the range
             throw new InvalidTimeslotException(timeslotStr + " is not a valid time slot.");
         }
+        */
         boolean morning = true;
 
         if (intTime > NUMBER_OF_TIMESLOTS_IN_MORNING){
