@@ -475,9 +475,9 @@ public class ClinicManager {
                     try { Sort<Provider> sorter = new Sort<>();
                         temperList = sorter.sorter(providers,(char)commandType.charAt(1));}
                     catch (Exception e) { System.out.println(e.getMessage());}
-                    for(int i = 1; i < temperList.size(); i++){
+                    for(int i = 0; i < temperList.size(); i++){
                         Provider provider = (Provider)temperList.get(i);
-                        System.out.println("(" + i + ") " + provider.getProfile() + " " + provider.calculateCredits(appointments));}
+                        System.out.println("(" + (i+1) + ") " + provider.getProfile() + " " + provider.calculateCredits(appointments));}
                     System.out.println("** end of list **");
                     break;
                 case ("C"):

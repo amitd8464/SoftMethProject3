@@ -162,8 +162,10 @@ public class Sort <T> {
         return 0;
     }
 
-    private static int comparePriority(Patient o1, Patient o2){
-        return o1.getProfile().compareTo(o2.getProfile());
+    private static int comparePriority(Patient o1, Patient o){
+            int compareProfile = o1.getProfile().compareTo(o2.getProfile());
+            if(compareProfile != 0){return compareProfile;}
+            return o1.charge().compareTo(o2.charge());
     }
 
     /**
