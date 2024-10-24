@@ -1,75 +1,88 @@
 package org.example.clinicmanagerjavafx;
 
-import clinic.Provider;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
+import clinic.*;
+import javafx.util.StringConverter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 
-import clinic.Timeslot;
-import clinic.ClinicManager;
+import util.Date;
+import util.List;
 
 import java.io.File;
+import java.sql.Time;
 
 public class HelloController {
 
+    // GUI Nodes
     @FXML
     private AnchorPane mainAnchorPane;
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private Tab scheduleTab;
+    @FXML
+    private Pane appointmentInfoPane;
+    @FXML
+    private Pane officeAppointmentSelectorPane;
+    @FXML
+    private Pane imagingAppointmentSelectorPane;
+    // these need to be refactored into ComboBox as well
+    @FXML
+    private ChoiceBox<String> chosenTimeslotImaging;
+    @FXML
+    private ChoiceBox<String> chosenTimeslotOffice;
+    @FXML
+    private DatePicker appointmentDatePicker;
+    // -------------------------------------------------------
+    @FXML
+    private ComboBox<Provider> cmbChosenProvider;
+    @FXML
+    private Pane visitTypePane;
+    @FXML
+    private ToggleGroup buttonToggleGroup;
+    @FXML
+    private RadioButton officeRadioButton;
+    @FXML
+    private RadioButton imagingRadioButton;
 
+
+    // logic variables:
     @FXML
     private boolean providersLoaded;
-
     @FXML
     private String providersFileName;
 
-    @FXML
-    private TabPane tabPane;
+    // variables that store user information temporarily, to be uploaded to backend:
 
-    @FXML
-    private Tab scheduleTab;
+        // user info
+        private String patientFname;
+        private String patientLname;
+        private Date patientDOB;
 
-    @FXML
-    private DatePicker appointmentDatePicker;
+        // universal info
+        private Provider apptProvider;
+        private Timeslot apptTimeslot;
 
-    @FXML
-    private Pane appointmentInfoPane;
+        // for Schedule appointment
+        private Date apptDate;
+        private String visitType;
 
-    @FXML
-    private ChoiceBox<String> chosenTimeslotImaging;
+        // for Reschedule appointment
+        private Timeslot oldTimeslot;
+        private Timeslot newTimeslot;
 
-    @FXML
-    private ChoiceBox<String> chosenTimeslotOffice;
 
-    @FXML
-    private ChoiceBox<String> chosenProvider;
-
-    @FXML
-    private Pane officeAppointmentSelectorPane;
-
-    @FXML
-    private Pane imagingAppointmentSelectorPane;
-
-    @FXML
-    private Pane visitTypePane;
-
-    @FXML
-    private ToggleGroup buttonToggleGroup;
-
-    @FXML
-    private RadioButton officeRadioButton;
-
-    @FXML
-    private RadioButton imagingRadioButton;
 
     @FXML
     void setTimeslotOptions(){
@@ -77,8 +90,8 @@ public class HelloController {
             Timeslot temp;
             for (int i = 1; i < 13; i++){
                 temp = Timeslot.stringToTimeSlot(String.valueOf(i));
-                chosenTimeslotOffice.getItems().add(temp.toString());
-                chosenTimeslotImaging.getItems().add(temp.toString());
+                chosenTimeslotOffice.getItems().add("(" + i + ") " + temp);
+                chosenTimeslotImaging.getItems().add("(" + i + ") " + temp);
             }
         }
         catch(Exception e){
@@ -88,7 +101,6 @@ public class HelloController {
 
     @FXML
     void showOfficeDetailSelector(javafx.event.ActionEvent event) {
-        System.out.println("Office radio button clicked");
         officeRadioButton.setSelected(true);
         officeAppointmentSelectorPane.setVisible(true);
         imagingAppointmentSelectorPane.setVisible(false);
@@ -97,12 +109,13 @@ public class HelloController {
 
     @FXML
     void showImagingDetailSelector(javafx.event.ActionEvent event) {
-        System.out.println("Imaging radio button clicked");
         imagingRadioButton.setSelected(true);
         imagingAppointmentSelectorPane.setVisible(true);
         officeAppointmentSelectorPane.setVisible(false);
         officeRadioButton.setSelected(false);
     }
+
+    // Methods that create nodes:
 
     private void createFileChooser(Dialog<String> dialog, DialogPane dialogPane, TextField filePathField, ButtonType okButtonType){
         FileChooser fileChooser = new FileChooser();
@@ -208,8 +221,9 @@ public class HelloController {
 
         // Call loadProviders only if OK was pressed
         if ("OK".equals(result)) {
-            System.out.println("result is OK");
             loadProviders();
+            providersLoaded = true;
+            setProviderDropdown();
         }
     }
 
@@ -219,31 +233,77 @@ public class HelloController {
         ClinicManager.readProviders(providersFileName);
     }
 
+    // setter methods, called in initialize():
+
     @FXML
     private void setListeners(){
-        chosenProvider.setOnMouseClicked((event) -> {
+
+        // for chosenProvider ComboBox
+        cmbChosenProvider.setOnMouseClicked((event) -> {
             if (!providersLoaded) showLoadProviders();
+        });
+
+    }
+
+    private void chosenProviderSetConverter(){
+        cmbChosenProvider.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Provider provider) {
+                if (provider instanceof Doctor d){
+                    if (d.getProfile().getFname().equals("Placeholder")){
+                        return "Choose a provider...";
+                    }
+                    else if (d.getProfile().getFname().equals("LOAD PROVIDERS")) return "Click to load providers";
+                    return d.getProfile().getFname() + " " + d.getProfile().getLname() + " (#" + d.getNPI() + ")";
+                }
+                return null;
+            }
+            @Override
+            public Provider fromString(String string) { return null; }
         });
     }
 
     private void setValues(){
+        // Associate radio buttons with the ToggleGroup
+        officeRadioButton.setToggleGroup(buttonToggleGroup);
+        imagingRadioButton.setToggleGroup(buttonToggleGroup);
+        officeRadioButton.setSelected(true);
+
+        // Set initial visibility
+        officeAppointmentSelectorPane.setVisible(true);
+        imagingAppointmentSelectorPane.setVisible(false);
+
         chosenTimeslotOffice.setValue("Choose a timeslot");
         chosenTimeslotImaging.setValue("Choose a timeslot");
+
+        chosenProviderSetConverter();
+        Doctor loadProvidersPlaceholder = new Doctor(new Profile("LOAD PROVIDERS", "", new Date(0, 0, 0)), "BRIDGEWATER", "FAMILY", "");
+        cmbChosenProvider.setValue(loadProvidersPlaceholder);
+
+        // set timeslot values in dropdown
+        setTimeslotOptions();
         providersLoaded = false;
+    }
+
+    // set provider values in dropdown
+    private void setProviderDropdown(){
+        // create list to store providers. Populate it with providers from getProviders()
+        ObservableList<Provider> observableProviders = FXCollections.observableArrayList();
+        for (Provider p : ClinicManager.getProviders()){
+            if (p instanceof Doctor d) observableProviders.add(d);
+        }
+        Doctor placeholder = new Doctor(new Profile("Placeholder", "", new Date(0, 0, 0)), "BRIDGEWATER", "FAMILY", "");
+        observableProviders.add(placeholder);
+        cmbChosenProvider.setItems(observableProviders);
+        cmbChosenProvider.setValue(placeholder);
     }
 
     @FXML
     public void initialize(){
         setListeners();
-        setTimeslotOptions();
         setValues();
-        // Ensure the radio buttons are properly associated with the ToggleGroup
-        officeRadioButton.setToggleGroup(buttonToggleGroup);
-        imagingRadioButton.setToggleGroup(buttonToggleGroup);
-        officeRadioButton.setSelected(true);
 
-        // Optionally set initial visibility
-        officeAppointmentSelectorPane.setVisible(true);
-        imagingAppointmentSelectorPane.setVisible(false);
+
+
     }
 }
