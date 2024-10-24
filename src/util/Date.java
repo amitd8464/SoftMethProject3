@@ -169,27 +169,19 @@ public class Date implements Comparable<Date> {
      * @return a created and filled Date object or null should there be an error, or it's invalid
      * @throws Exception should the string not be a date
      */
-    public static Date strToDate (String strDate, boolean appointment) throws Exception{
-        StringTokenizer tokenizedDate = new StringTokenizer(strDate,"/",false);
-        if(tokenizedDate.countTokens() != 3){
-            return null;
-        }
-        int month,day,year;
-        try{   // checks date format upon conversion
-            month = Integer.parseInt(tokenizedDate.nextToken());
-            day = Integer.parseInt(tokenizedDate.nextToken());
-            year = Integer.parseInt(tokenizedDate.nextToken());
-        }
-        catch(NumberFormatException e){
-            return null; // format of date is wrong, so it is an invalid command, prob not a number
-        }
+    public static Date strToDate (int month, int day, int year, boolean appointment) throws Exception{
+
         Date userDate = new Date(year, month, day);
 
+        /*
         if (!userDate.isValid()){ // this should check if day works for the month
             String dateType = appointment ? "Appointment date: " : "Patient dob: ";
             throw new InvalidDateException(dateType + strDate + " is not a valid calendar date ");
         }
+        * */
+
         // date is today -- not legal for appointment OR date of birth
+        /*
         if (userDate.chronology(0)){
             String dateType = appointment ? "Appointment date: " : "Patient dob: ";
             throw new DatePastOrTodayException(dateType + strDate + " is today or a date before today.");
@@ -208,6 +200,8 @@ public class Date implements Comparable<Date> {
         else if (userDate.isWeekend() && appointment){
             throw new WeekendDateException("Appointment date: " + strDate + " is Saturday or Sunday.");
         }
+
+        * */
         return userDate;
     }
 

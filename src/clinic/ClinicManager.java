@@ -257,42 +257,37 @@ public class ClinicManager {
         if (!found){ System.out.println(apptDate + " " + timeslot + " " + profile + " - appointment does not exist."); }
     }
 
-    /*
     public void handleReschedule(Date apptDate, Timeslot oldTimeslot, String newTimeslotStr, String fname, String lname, Date dob) throws Exception {
         Patient patient = new Patient(new Profile(fname, lname, dob));
-        try {
-            boolean found = false;
-            Timeslot newTimeslot = Timeslot.stringToTimeSlot(newTimeslotStr);
-            // check if this appointment exists:
-            // make a temporary appt (doctor does not matter)
-            Appointment oldAppt = new Appointment(apptDate, oldTimeslot, patient, providers.get(0));
-            for(Appointment appt : appointments){
-                if (appt.equals(oldAppt)){
-                    found = true;
-                    // check if doctor is available and patient is available
-                    Provider provider = (Provider)appt.getProvider();
-                    if (providerBooked(provider, apptDate, newTimeslot)){
-                        System.out.println(provider + " is not available at slot " + newTimeslot.getNum());
-                    }
-                    else if (patientBooked(patient, apptDate, newTimeslot)){
-                        System.out.println(patient + " has an existing appointment at " + apptDate + " " + newTimeslot);
-                    }
-                    else{
-                        // add appt to new timeslot
-                        Appointment rescheduled = new Appointment(apptDate, newTimeslot, patient, provider);
-                        appointments.add(rescheduled);
-                        System.out.println("Rescheduled to " + rescheduled);
-                        appointments.remove(appt);
-                    }
-                    break;
+        boolean found = false;
+        Timeslot newTimeslot = Timeslot.stringToTimeSlot(newTimeslotStr);
+        // check if this appointment exists:
+        // make a temporary appt (doctor does not matter)
+        Appointment oldAppt = new Appointment(apptDate, oldTimeslot, patient, providers.get(0));
+        for(Appointment appt : appointments){
+            if (appt.equals(oldAppt)){
+                found = true;
+                // check if doctor is available and patient is available
+                Provider provider = (Provider)appt.getProvider();
+                if (providerBooked(provider, apptDate, newTimeslot)){
+                    System.out.println(provider + " is not available at slot " + newTimeslot.getNum());
                 }
+                else if (patientBooked(patient, apptDate, newTimeslot)){
+                    System.out.println(patient + " has an existing appointment at " + apptDate + " " + newTimeslot);
+                }
+                else{
+                    // add appt to new timeslot
+                    Appointment rescheduled = new Appointment(apptDate, newTimeslot, patient, provider);
+                    appointments.add(rescheduled);
+                    System.out.println("Rescheduled to " + rescheduled);
+                    appointments.remove(appt);
+                }
+                break;
             }
-            if (!found) System.out.println(apptDate + " " + oldTimeslot + " " + patient + " does not exist.");
-        } catch (InvalidTimeslotException e) {
-            System.out.println(e.getMessage());
         }
+        if (!found) System.out.println(apptDate + " " + oldTimeslot + " " + patient + " does not exist.");
     }
-    */
+
 
     public void handleScheduleImaging(Date apptDate, Timeslot timeslot, String fname, String lname, Date dob, String imagingType) {
         try {

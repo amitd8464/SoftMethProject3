@@ -19,6 +19,7 @@ import javafx.scene.control.DialogPane;
 import util.Date;
 
 import java.io.File;
+import java.time.LocalDate;
 
 public class HelloController {
 
@@ -42,7 +43,6 @@ public class HelloController {
     private ComboBox<Timeslot> cmbChosenTimeslotOffice;
     @FXML
     private DatePicker appointmentDatePicker;
-    // -------------------------------------------------------
     @FXML
     private ComboBox<Provider> cmbChosenProvider;
     @FXML
@@ -53,6 +53,10 @@ public class HelloController {
     private RadioButton officeRadioButton;
     @FXML
     private RadioButton imagingRadioButton;
+    @FXML
+    private Label invalidApptDateLabel;
+    @FXML
+    private Label invalidDOBLabel;
 
 
     // logic variables:
@@ -120,7 +124,12 @@ public class HelloController {
     }
 
     @FXML
-    void scheduleOfficeAppt(){}
+    void scheduleOfficeAppt(){
+        // create Date instance and check if it is valid:
+        LocalDate date = appointmentDatePicker.getValue();
+        String strDate = date.getDayOfMonth() + "/" + date.getDayOfMonth() + "/" + date.getYear();
+
+    }
     @FXML
     void scheduleImagingAppt(){}
 
@@ -309,8 +318,18 @@ public class HelloController {
 
         setTimeslotDropdown(cmbChosenTimeslotOffice);
         setTimeslotDropdown(cmbChosenTimeslotImaging);
-        // cmbChosenTimeslotOffice.setValue(new Timeslot(0, 0));
         providersLoaded = false;
+    }
+
+    private void initializeErrorLabels(){
+        invalidApptDateLabel.setText("");
+        invalidDOBLabel.setText("");
+    }
+
+    @FXML
+    void dateError(){
+        invalidApptDateLabel.setText("Appointment date must be after today.");
+        invalidDOBLabel.setText("DOB must be today or before today.");
     }
 
     // set provider values in dropdown
@@ -343,8 +362,6 @@ public class HelloController {
     public void initialize(){
         setListeners();
         setValues();
-
-
-
+        initializeErrorLabels();
     }
 }
